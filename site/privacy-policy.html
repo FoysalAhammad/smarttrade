@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Smart Trade — privacy policy. No personal data, no tracking. API keys encrypted on-device only.">
+<meta name="theme-color" content="#07090F">
+<meta property="og:title" content="Privacy Policy · Smart Trade">
+<meta property="og:description" content="Privacy Policy — Smart Trade crypto swing-trading journal. No personal data, no trackers, no ads. API keys encrypted on-device only.">
+<meta property="og:image" content="images/feature-graphic.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://foysalahammad.github.io/smarttrade/privacy-policy.html">
+<title>Privacy Policy · Smart Trade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="images/icon.png">
+<link rel="apple-touch-icon" href="images/icon.png">
+<link rel="manifest" content="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+<title>Privacy Policy · Smart Trade</title>
+</head>
+<body>
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-in">
+    <a class="brand" href="index.html" aria-label="Smart Trade home">
+      <img src="images/icon.png" alt="" width="34" height="34">
+      <span>Smart Trade</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="privacy-policy.html" aria-current="page">Privacy</a>
+      <a href="https://github.com/FoysalAhammad/smarttrade/wiki" target="_blank" rel="noopener">Wiki</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <header class="policy-hero">
+    <div class="wrap">
+      <div class="policy-hero">
+        <div class="policy-badge">Privacy Policy</div>
+        <h1>Privacy Policy</h1>
+        <p class="sub">Effective date: <strong>3 October 2026</strong> · Version 1.0.0</p>
+      </div>
+    </header>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="policy-section">
+        <h2>1 · Overview</h2>
+        <p>Smart Trade ("the app") is a personal crypto swing-trading journal for spot markets (USDT pairs). This policy explains what the app does with your information. By continuing to use the app you accept this policy.</p>
+      </section>
+
+      <section class="policy-section">
+        <h2>2 · Data we collect</h2>
+        <ul>
+          <li><strong>No personal data.</strong> No names, emails, phones, contacts, location or identifiers are collected.</          <li><strong>Binance API key & secret</strong> — entered by you, stored <strong>only on this device</strong> inside the OS keystore (Android Keystore / iOS Keychain) with strong encryption. They are never transmitted anywhere except directly to Binance APIs.</li>
+          <li><strong>Demo wallet, positions, trade history, settings</strong> — stored only in local app storage on this device.</li>
+          <li><strong>Market data</strong> (prices, candles) — fetched anonymously from Binance public endpoints.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section">
+        <h2>3 · How your information is used</h2>
+        <ul>
+          <li>API credentials are used solely to read your Binance spot balances and trade fees so the journal can display them.</          <li>The app never places orders on your behalf and never enables withdrawals.</li>
+          <li>Local data stays on the device; you can erase it any time via <code>Settings → Reset trade data</code> or by uninstalling the app.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section">
+        <h2>4 · Sharing & disclosure</h2>
+        <p>We do not sell, rent or share any data with third parties — there is no backend to share it with.</p>
+        <p>Data leaves your device only as signed TLS requests to Binance endpoints that you control.</      </section>
+
+      <section class="policy-section">
+        <h2>5 · Security</h2>
+        <ul>
+          <li>Credentials: OS-level keystore encryption (Android Keystore / iOS Keychain).</li>
+          <li>Transport: TLS (HTTPS/WSS) to Binance only.</li>
+          <li>No data is transmitted to the developer.</li>
+        </ul>
+      </section>
+
+      <section class="policy-section">
+        <h2>6 · Children & changes</h2>
+        <p>The app is not directed at children under 13. This policy may be updated with new app versions; the effective date above always applies.</      </section>
+
+      <section class="policy-section">
+        <h2>7 · Contact</h2>
+        <p>Questions? Contact the developer through the support channel listed on the app store listing, or open an issue in the project repository.</      </section>
+
+      <section class="policy-section">
+        <h2>8 · Advertising</h2>
+        <p><strong>Advertising (Google AdMob)</strong> — ads appear only at a few in-app moments (applying a strategy script, changing the trading method, copying your IP, saving an API key, enabling demo mode). AdMob receives your <strong>advertising ID</strong> and coarse device information to serve ads — reset anytime in Android Settings → Privacy → Ads. Nothing else is shared.</p>
+      </section>
+
+      <section class="policy-section">
+        <h2>7 · Changes to this policy</h2>
+        <p>This policy may be updated with new app versions; the effective date above always applies. Continued use of the app after changes constitutes acceptance.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap foot">
+        <div>© 2026 <a href="https://github.com/FoysalAhammad">Foysal Ahammad</a> · MIT License · Not financial advice</div>
+        <div>
+          <a href="index.html">Home</a> ·
+          <a href="https://github.com/FoysalAhammad/smarttrade/wiki">Wiki</a> ·
+          <a href="https://foysalahammad.github.io/smarttrade/privacy-policy.html">Privacy</a>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('on')), { threshold: .12 });
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
