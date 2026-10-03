@@ -9,10 +9,10 @@ Live candlestick charts · TradingView-style signal scripts · fee-aware P&L · 
 [![Android](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://github.com/FoysalAhammad/smarttrade)
 [![Privacy](https://img.shields.io/badge/privacy-100%25%20on--device-0ECB81)](site/privacy-policy.html)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Wiki](https://img.shields.io/badge/docs-wiki-4C8DFF)](https://github.com/FoysalAhammad/smarttrade/wiki)
+[![Wiki](https://img.shields.io/badge/docs-wiki-4C8DFF)](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki)
 [![Site](https://img.shields.io/badge/website-live-00D9FF)](https://foysalahammad.github.io/smarttrade/)
 
-**[🌐 Website](https://foysalahammad.github.io/smarttrade/)** · **[📚 Wiki](https://github.com/FoysalAhammad/smarttrade/wiki)** · **[🔒 Privacy Policy](https://foysalahammad.github.io/smarttrade/privacy-policy.html)**
+**[🌐 Website](https://foysalahammad.github.io/smarttrade/)** · **[📚 Wiki](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki)** · **[🔒 Privacy Policy](https://foysalahammad.github.io/smarttrade/privacy-policy.html)**
 
 <img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/feature-graphic.png" width="100%" alt="Smart Trade — live charts, signals, true P&L" />
 
@@ -110,14 +110,14 @@ Fees are deducted **per leg** (default 0.075% → 0.15% round trip) and shown in
 
 ## Documentation
 
-Full user documentation lives in the **[Wiki](https://github.com/FoysalAhammad/smarttrade/wiki)**:
+Full user documentation lives in the **[Wiki](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki)**:
 
-- [Getting Started](https://github.com/FoysalAhammad/smarttrade/wiki/Getting-Started)
-- [Features](https://github.com/FoysalAhammad/smarttrade/wiki/Features)
-- [Trading Methods](https://github.com/FoysalAhammad/smarttrade/wiki/Trading-Methods)
-- [Strategy Script Guide](https://github.com/FoysalAhammad/smarttrade/wiki/Strategy-Script-Guide)
-- [Privacy Policy](https://github.com/FoysalAhammad/smarttrade/wiki/Privacy-Policy)
-- [FAQ](https://github.com/FoysalAhammad/smarttrade/wiki/FAQ)
+- [Getting Started](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki/Getting-Started)
+- [Features](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki/Features)
+- [Trading Methods](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki/Trading-Methods)
+- [Strategy Script Guide](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki/Strategy-Script-Guide)
+- [Privacy Policy](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki/Privacy-Policy)
+- [FAQ](https://github.com/FoysalAhammad/smarttrade/tree/main/docs/wiki/FAQ)
 
 ---
 
