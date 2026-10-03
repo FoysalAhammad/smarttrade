@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Trade — Crypto Swing-Trading Journal for Android</title>
+<meta name="description" content="Smart Trade: live candlestick charts, signal scripts, fee-aware P&L and multi-coin portfolio for Binance spot traders. Privacy-first — no accounts, no trackers.">
+<meta name="theme-color" content="#07090F">
+<meta property="og:title" content="Smart Trade — Crypto Swing-Trading Journal">
+<meta property="og:description" content="Live charts · trading signals · fee-aware P&L · 100% on-device privacy.">
+<meta property="og:image" content="images/feature-graphic.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="images/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090F; --bg2:#0B0E15; --card:#121722; --card2:#151C29;
+  --line:#232A33; --text:#EAECEF; --sub:#A7B0BA; --dim:#7A8390;
+  --blue:#4C8DFF; --cyan:#00D9FF; --green:#0ECB81; --red:#F6465D; --amber:#F7B733;
+  --grad:linear-gradient(135deg,#4C8DFF,#00D9FF);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+h1,h2,h3,.mono{font-family:'Space Grotesk',Inter,sans-serif}
+
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,9,15,.78);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1120px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:.2px}
+.brand img{width:34px;height:34px;border-radius:9px}
+.nav-links{display:flex;gap:6px;margin-left:auto;align-items:center}
+.nav-links a{padding:8px 13px;border-radius:10px;font-size:13.5px;font-weight:600;color:var(--sub);transition:.18s}
+.nav-links a:hover{color:var(--text);background:rgba(76,141,255,.12)}
+.nav-cta{background:var(--grad)!important;color:#04111F!important;font-weight:800!important}
+.burger{display:none;background:none;border:1px solid var(--line);border-radius:10px;padding:8px 11px;color:var(--text);font-size:17px;cursor:pointer;margin-left:auto}
+@media(max-width:760px){
+  .nav-links{position:fixed;inset:60px 0 auto 0;flex-direction:column;background:#0B0E15;border-bottom:1px solid var(--line);padding:14px 22px;gap:4px;display:none}
+  .nav-links.open{display:flex}
+  .burger{display:block}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:86px 0 64px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -20% auto -20%;height:560px;background:radial-gradient(ellipse at 30% 20%,rgba(76,141,255,.28),transparent 60%),radial-gradient(ellipse at 75% 60%,rgba(0,217,255,.16),transparent 55%);pointer-events:none}
+.hero-in{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+@media(max-width:900px){.hero-in{grid-template-columns:1fr;gap:28px}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.chip{font-size:12px;font-weight:700;padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--sub)}
+.chip.g{border-color:rgba(14,203,129,.5);color:var(--green)}
+.chip.b{border-color:rgba(76,141,255,.5);color:var(--blue)}
+.chip.c{border-color:rgba(0,217,255,.5);color:var(--cyan)}
+.hero h1{font-size:clamp(34px,5.4vw,56px);line-height:1.08;letter-spacing:-1px}
+.hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{color:var(--sub);font-size:17px;margin-top:16px;max-width:560px}
+.cta{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:14px;font-weight:800;font-size:14.5px;transition:.18s;border:1px solid transparent;cursor:pointer}
+.btn-primary{background:var(--grad);color:#04111F;box-shadow:0 8px 30px rgba(76,141,255,.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(76,141,255,.5)}
+.btn-ghost{border-color:var(--line);background:var(--card);color:var(--text)}
+.btn-ghost:hover{border-color:var(--blue);transform:translateY(-2px)}
+.hero-art{position:relative}
+.hero-art img.main{width:100%;border-radius:20px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55)}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-26px;position:relative;z-index:2}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px;text-align:center}
+.stat b{display:block;font-size:26px;font-family:'Space Grotesk'}
+.stat span{font-size:12px;color:var(--dim);font-weight:600}
+.s1 b{color:var(--cyan)} .s2 b{color:var(--blue)} .s3 b{color:var(--green)} .s4 b{color:var(--amber)}
+
+/* ---------- sections ---------- */
+section{padding:74px 0}
+.sec-head{text-align:center;margin-bottom:44px}
+.sec-head .kicker{color:var(--blue);font-weight:800;letter-spacing:2.5px;font-size:12.5px;text-transform:uppercase}
+.sec-head h2{font-size:clamp(26px,3.6vw,38px);margin-top:10px;letter-spacing:-.5px}
+.sec-head p{color:var(--sub);max-width:640px;margin:12px auto 0;font-size:15.5px}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:24px 22px;transition:.2s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-4px);border-color:rgba(76,141,255,.45);box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.card .ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;background:rgba(76,141,255,.14);border:1px solid rgba(76,141,255,.3);margin-bottom:14px}
+.card h3{font-size:16.5px;margin-bottom:7px}
+.card p{color:var(--sub);font-size:13.8px}
+
+/* ---------- screenshots ---------- */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.shots{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.shots{grid-template-columns:1fr}}
+.shot{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000;transition:.2s;position:relative}
+.shot img{width:100%;display:block}
+.shot:hover{transform:translateY(-5px) scale(1.015);border-color:var(--cyan);box-shadow:0 16px 44px rgba(0,217,255,.18)}
+.shot .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 11px;font-size:12.5px;font-weight:700;background:linear-gradient(transparent,rgba(7,9,15,.92));color:#fff}
+
+/* ---------- methods ---------- */
+.methods{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.methods{grid-template-columns:1fr}}
+.method{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
+.method .tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:4px 10px;border-radius:8px;margin-bottom:12px}
+.m1 .tag{background:rgba(246,70,93,.14);color:var(--red);border:1px solid rgba(246,70,93,.4)}
+.m2 .tag{background:rgba(14,203,129,.14);color:var(--green);border:1px solid rgba(14,203,129,.4)}
+.method h3{font-size:19px;margin-bottom:8px}
+.method p{color:var(--sub);font-size:14.5px}
+.flow{margin-top:14px;font-family:'Space Grotesk';font-size:14px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--cyan)}
+
+/* ---------- privacy ---------- */
+.privacy{background:linear-gradient(135deg,rgba(76,141,255,.10),rgba(0,217,255,.05));border:1px solid rgba(76,141,255,.3);border-radius:22px;padding:40px 34px;display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:760px){.privacy{grid-template-columns:1fr;padding:28px 22px}}
+.privacy h2{font-size:26px}
+.privacy ul{list-style:none;display:grid;gap:10px;margin-top:6px}
+.privacy li{display:flex;gap:10px;color:var(--sub);font-size:14.5px;align-items:flex-start}
+.privacy li b{color:var(--text)}
+.dot-yes{color:var(--green)} .dot-no{color:var(--red)}
+
+/* ---------- get ---------- */
+.get{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:44px 30px;text-align:center;position:relative;overflow:hidden}
+.get::before{content:"";position:absolute;inset:auto -30% -70% -30%;height:340px;background:radial-gradient(ellipse,rgba(76,141,255,.25),transparent 65%);pointer-events:none}
+.get h2{font-size:30px;position:relative}
+.get p{color:var(--sub);max-width:560px;margin:12px auto 24px;position:relative}
+.pill{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:700;border:1px dashed rgba(240,185,11,.6);color:var(--amber);padding:8px 16px;border-radius:99px;margin-bottom:22px;position:relative}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:34px 0 44px;color:var(--dim);font-size:13.5px}
+.foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+.foot a{color:var(--sub);font-weight:600}
+.foot a:hover{color:var(--cyan)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:.6s cubic-bezier(.2,.7,.2,1)}
+.reveal.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="#"><img src="images/icon.png" alt="Smart Trade icon"> Smart&nbsp;Trade</a>
+    <button class="burger" aria-label="Menu" onclick="document.getElementById('ml').classList.toggle('open')">☰</button>
+    <div class="nav-links" id="ml">
+      <a href="#features">Features</a>
+      <a href="#screens">Screens</a>
+      <a href="#methods">Methods</a>
+      <a href="#privacy">Privacy</a>
+      <a href="privacy-policy.html">Policy</a>
+      <a href="https://github.com/FoysalAhammad/smarttrade/wiki">Wiki</a>
+      <a class="nav-cta" href="https://github.com/FoysalAhammad/smarttrade">GitHub ★</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <div class="chips">
+        <span class="chip g">● 100% on-device</span>
+        <span class="chip b">Android</span>
+        <span class="chip c">Multi-coin · USDT pairs</span>
+      </div>
+      <h1>Swing trade crypto like a <em>pro trader</em> — not like a gambler.</h1>
+      <p class="lead">Live candlestick charts, your own signal scripts, and <strong>true P&amp;L after exchange fees</strong> — in a journal that never phones home. No accounts. No trackers. Your keys stay in your device keystore.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/FoysalAhammad/smarttrade">⭐ Star on GitHub</a>
+        <a class="btn btn-ghost" href="https://github.com/FoysalAhammad/smarttrade/wiki/Getting-Started">Read the Wiki →</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img class="main" src="images/2-dashboard-chart.png" alt="Smart Trade dashboard with live candlestick chart and trading signals" loading="eager">
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats reveal">
+    <div class="stat s1"><b>Live</b><span>CANDLE CHARTS · 1m–4H</span></div>
+    <div class="stat s2"><b>2</b><span>SWING METHODS</span></div>
+    <div class="stat s3"><b>100%</b><span>FEE-AWARE P&amp;L</span></div>
+    <div class="stat s4"><b>0</b><span>DATA LEAVES DEVICE</span></div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">What you get</div>
+      <h2>Everything a swing trader checks daily</h2>
+      <p>Built as a journal first — the chart and signals serve the one number that matters: net profit after fees.</p>
+    </div>
+    <div class="grid">
+      <div class="card reveal"><div class="ic">📈</div><h3>Realtime candlestick chart</h3><p>Candles, volume, crosshair OHLC, animated live price line and intervals from 1m to 4H, streaming from official market data.</p></div>
+      <div class="card reveal"><div class="ic">🤏</div><h3>Two-finger chart control</h3><p>Pinch to zoom, pan through history, jump with −50/+50, single-finger crosshair — and the page never scrolls under your fingers.</p></div>
+      <div class="card reveal"><div class="ic">🧠</div><h3>Strategy signal scripts</h3><p>Write <code>ema</code>, <code>sma</code>, <code>rsi</code>, <code>crossover</code> and <code>plot()</code> lines in the built-in editor — buy/sell markers appear on the chart live.</p></div>
+      <div class="card reveal"><div class="ic">🪙</div><h3>Any coin you hold</h3><p>Tap the pair name to switch markets — only coin/USDT pairs, and account coins worth ≥ 1 USDT are listed first.</p></div>
+      <div class="card reveal"><div class="ic">🧮</div><h3>True fee-aware P&amp;L</h3><p>Every profit figure is net of the real taker fee — per leg and round trip — auto-fetched from your account when connected.</p></div>
+      <div class="card reveal"><div class="ic">🎯</div><h3>Armed targets, or full manual</h3><p>Re-entry / take-profit cycles with zone alerts — or switch the target off and journal manually, history still records.</p></div>
+      <div class="card reveal"><div class="ic">📊</div><h3>History &amp; daily P&amp;L</h3><p>Entry, exit, fee, net profit and wallet snapshots per cycle — grouped by date with all-time and today totals.</p></div>
+      <div class="card reveal"><div class="ic">👛</div><h3>Demo paper wallet</h3><p>Practice with a virtual balance on live prices. Set your own starting amounts — no real funds ever move.</p></div>
+      <div class="card reveal"><div class="ic">🔒</div><h3>Read-only &amp; encrypted</h3><p>API keys live in the OS keystore, used read-only for balances and fees. No withdrawals. Ever.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="screens" style="background:var(--bg2);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Screenshots</div>
+      <h2>Dark, fast, glanceable</h2>
+      <p>Captured straight from a real device.</p>
+    </div>
+    <div class="shots">
+      <a class="shot reveal" href="images/2-dashboard-chart.png" target="_blank"><img src="images/2-dashboard-chart.png" alt="Dashboard live chart" loading="lazy"><span class="cap">Dashboard · live chart &amp; signals</span></a>
+      <a class="shot reveal" href="images/3-chart-crosshair.png" target="_blank"><img src="images/3-chart-crosshair.png" alt="Crosshair OHLC" loading="lazy"><span class="cap">Crosshair · OHLC on tap</span></a>
+      <a class="shot reveal" href="images/4-pair-selector.png" target="_blank"><img src="images/4-pair-selector.png" alt="Coin selector" loading="lazy"><span class="cap">Coin selector · your markets first</span></a>
+      <a class="shot reveal" href="images/5-strategy-script.png" target="_blank"><img src="images/5-strategy-script.png" alt="Strategy script editor" loading="lazy"><span class="cap">Strategy script editor</span></a>
+      <a class="shot reveal" href="images/6-account-pnl.png" target="_blank"><img src="images/6-account-pnl.png" alt="Account balances and P&L" loading="lazy"><span class="cap">Account · balances &amp; P&amp;L</span></a>
+      <a class="shot reveal" href="images/1-consent.png" target="_blank"><img src="images/1-consent.png" alt="Privacy consent" loading="lazy"><span class="cap">Privacy consent · first launch</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="methods">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Trading methods</div>
+      <h2>Two proven swing playbooks</h2>
+      <p>Both fully fee-aware. Targets can be switched off for manual journal trading.</p>
+    </div>
+    <div class="methods">
+      <div class="method m1 reveal">
+        <span class="tag">METHOD 1 · SELL FIRST</span>
+        <h3>Sold the top → buy the dip back</h3>
+        <p>Sell holdings at market, arm a lower re-entry target, and accumulate extra coins when price comes back. Profit is measured in <b>coins</b>.</p>
+        <div class="flow">sell price → arm lower target → re-buy below → coins gained ✅</div>
+      </div>
+      <div class="method m2 reveal">
+        <span class="tag">METHOD 2 · BUY FIRST</span>
+        <h3>Bought low → sell the rise</h3>
+        <p>Buy at market, arm a higher take-profit target, and exit into strength. Profit is measured in <b>USDT</b>, fee deducted.</p>
+        <div class="flow">buy → arm higher target → sell above → USDT gained ✅</div>
+      </div>
+    </div>
+    <p class="reveal" style="text-align:center;color:var(--dim);font-size:13.5px;margin-top:18px">Default fee 0.075% per leg (0.15% round trip) — auto-fetched from your account when connected.</p>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="wrap">
+    <div class="privacy reveal">
+      <div>
+        <div class="kicker" style="color:var(--blue);font-weight:800;letter-spacing:2.5px;font-size:12.5px">Privacy first</div>
+        <h2 style="margin-top:10px">Your data never leaves your phone</h2>
+        <p style="color:var(--sub);margin-top:12px;font-size:15px">No accounts. No servers. No analytics SDKs. No ads. No trackers. The app works fully on-device and talks only to the exchange <b style="color:var(--text)">you</b> configure.</p>
+        <div class="cta" style="margin-top:22px">
+          <a class="btn btn-ghost" href="privacy-policy.html">Read full Privacy Policy →</a>
+        </div>
+      </div>
+      <div>
+        <ul>
+          <li><span class="dot-no">✕</span><span><b>No personal data</b> — no email, no phone, no identifiers.</span></li>
+          <li><span class="dot-no">✕</span><span><b>No sharing</b> — nothing is sold or sent to third parties.</span></li>
+          <li><span class="dot-yes">✓</span><span><b>Keys encrypted</b> in Android Keystore / iOS Keychain.</span></li>
+          <li><span class="dot-yes">✓</span><span><b>Read-only</b> usage — balances &amp; fees only, never withdrawals.</span></li>
+          <li><span class="dot-yes">✓</span><span><b>Local storage</b> for wallet, history &amp; settings.</span></li>
+          <li><span class="dot-yes">✓</span><span><b>Delete anytime</b> — reset in-app or uninstall.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="get">
+  <div class="wrap">
+    <div class="get reveal">
+      <span class="pill">📱 Google Play release — coming soon</span>
+      <h2>Get Smart Trade</h2>
+      <p>The Play Store listing is being prepared. Meanwhile the full documentation, install steps and script guide are live in the wiki.</p>
+      <div class="cta" style="justify-content:center;position:relative">
+        <a class="btn btn-primary" href="https://github.com/FoysalAhammad/smarttrade/wiki/Getting-Started">🚀 Getting Started</a>
+        <a class="btn btn-ghost" href="https://github.com/FoysalAhammad/smarttrade">📦 Repository</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>© 2026 <a href="https://github.com/FoysalAhammad">Foysal Ahammad</a> · MIT License · Not financial advice</div>
+    <div>
+      <a href="https://github.com/FoysalAhammad/smarttrade">Repository</a> ·
+      <a href="https://github.com/FoysalAhammad/smarttrade/wiki">Wiki</a> ·
+      <a href="privacy-policy.html">Privacy</a> ·
+      <a href="https://foysalahammad.github.io/agent24">Agent 24</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// scroll reveal
+const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('on')), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+// close mobile menu on nav click
+document.querySelectorAll('#ml a').forEach(a => a.addEventListener('click', () => document.getElementById('ml').classList.remove('open')));
+</script>
+</body>
+</html>
