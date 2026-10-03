@@ -123,8 +123,9 @@ Full user documentation lives in the **[Wiki](https://github.com/FoysalAhammad/s
 
 ## Privacy first
 
-- ❌ No accounts, no servers, no analytics, no ads, no trackers
+- ❌ No accounts, no servers, no analytics, no trackers
 - ❌ No personal data collected or shared
+- 📢 Ads: **Google AdMob only**, at a handful of in-app moments (receives advertising ID alone)
 - ✅ API keys stored **only** in your device's keystore (encrypted)
 - ✅ Everything else — demo wallet, history, settings — stays in local app storage
 - ✅ Data leaves the device only as your own TLS requests to the exchange you configured

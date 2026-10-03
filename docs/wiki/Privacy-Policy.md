@@ -15,6 +15,7 @@ The app works fully on-device. No user accounts, no backend servers, no analytic
 ##2 · Data we collect
 
 - **No personal data** — no names, emails, phones, contacts, location or identifiers.
+- **Advertising (Google AdMob)** — shown only at a few in-app moments (strategy apply, method change, IP copy, API key save, demo enable); receives your **advertising ID** + coarse device info only (resettable in Android Settings → Privacy → Ads).
 - **Binance API key & secret** — entered by you, stored **only on this device** inside the OS keystore (Android Keystore / iOS Keychain), encrypted. Never sent anywhere except directly to the exchange APIs.
 - **Demo wallet, positions, history, settings** — local app storage only.
 - **Market data** — fetched anonymously from public exchange endpoints.
@@ -26,7 +27,7 @@ The app works fully on-device. No user accounts, no backend servers, no analytic
 
 ##4 · Sharing
 
-Nothing is sold, rented or shared — there is no backend to share it with. Data leaves the device only as your own TLS requests to the exchange you configured.
+Nothing is sold, rented or shared — no backend exists to share it with. The only third party is **Google AdMob** (advertising ID only, for ad delivery). Market data leaves the device only as your own TLS requests to the exchange you configured.
 
 ##5 · Security
 
