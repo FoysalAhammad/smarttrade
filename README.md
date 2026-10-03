@@ -14,7 +14,7 @@ Live candlestick charts · TradingView-style signal scripts · fee-aware P&L · 
 
 **[🌐 Website](https://foysalahammad.github.io/smarttrade/)** · **[📚 Wiki](https://github.com/FoysalAhammad/smarttrade/wiki)** · **[🔒 Privacy Policy](https://foysalahammad.github.io/smarttrade/privacy-policy.html)**
 
-<img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/feature-graphic.png" width="100%" alt="Smart Trade — live charts, signals, true P&L" />
+<img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/feature-graphic.png" width="100%" alt="Smart Trade — live charts, signals, true P&L" />
 
 </div>
 
@@ -32,14 +32,14 @@ Connect your own read-only API key (or switch on the demo paper wallet), pick an
 
 <table>
 <tr>
-<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/2-dashboard-chart.png" width="240" alt="Dashboard with live candlestick chart"></td>
-<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/3-chart-crosshair.png" width="240" alt="Chart crosshair OHLC"></td>
-<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/4-pair-selector.png" width="240" alt="Coin selector"></td>
+<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/2-dashboard-chart.png" width="240" alt="Dashboard with live candlestick chart"></td>
+<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/3-chart-crosshair.png" width="240" alt="Chart crosshair OHLC"></td>
+<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/4-pair-selector.png" width="240" alt="Coin selector"></td>
 </tr>
 <tr>
-<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/5-strategy-script.png" width="240" alt="Strategy script editor"></td>
-<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/6-account-pnl.png" width="240" alt="Account and daily P&L"></td>
-<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/site/images/1-consent.png" width="240" alt="Privacy consent on first launch"></td>
+<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/5-strategy-script.png" width="240" alt="Strategy script editor"></td>
+<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/6-account-pnl.png" width="240" alt="Account and daily P&L"></td>
+<td><img src="https://raw.githubusercontent.com/FoysalAhammad/smarttrade/main/docs/images/1-consent.png" width="240" alt="Privacy consent on first launch"></td>
 </tr>
 </table>
 
