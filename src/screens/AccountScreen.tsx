@@ -19,6 +19,8 @@ interface DayRow {
   profitSui: number;
   profitUsdt: number;
   count: number;
+  /** Previous day's portfolio value for change % calc. */
+  prevValue?: number;
 }
 
 export const AccountScreen: React.FC = () => {
@@ -83,8 +85,10 @@ export const AccountScreen: React.FC = () => {
     [history],
   );
 
+  // Daily P&L with previous day portfolio value for change %
   const dayRows = useMemo<DayRow[]>(() => {
     const map = new Map<string, DayRow>();
+    // Build daily P&L from completed trades
     for (const r of history) {
       const key = dayKey(r.completedAt);
       const row = map.get(key) ?? {
@@ -100,10 +104,24 @@ export const AccountScreen: React.FC = () => {
       row.ts = Math.max(row.ts, r.completedAt);
       map.set(key, row);
     }
-    return [...map.values()].sort((a, b) => b.key.localeCompare(a.key));
-  }, [history]);
+    const rows = [...map.values()].sort((a, b) => b.key.localeCompare(a.key));
+    // Add previous day portfolio value for change % (simplified: use current portfolio value - today's P&L as prev)
+    if (portfolioValue !== null && rows.length > 0) {
+      const today = rows[0];
+      // Estimate previous day value: current portfolio - today's P&L (in USDT)
+      today.prevValue = portfolioValue - (today.profitUsdt || 0);
+    }
+    return rows;
+  }, [history, portfolioValue]);
 
   const signed = (v: number, decimals = 2) => `${v >= 0 ? '+' : ''}${formatSui(v, decimals)}`;
+  const signedUsdt = (v: number) => `${v >= 0 ? '+' : ''}${formatUsdt(v)}`;
+
+  // Calculate change % for today
+  const todayRow = dayRows[0];
+  const todayChangePct = todayRow && todayRow.prevValue !== undefined && todayRow.prevValue > 0
+    ? ((portfolioValue! - todayRow.prevValue) / todayRow.prevValue) * 100
+    : null;
 
   return (
     <View style={[styles.root, { backgroundColor: t.colors.bg.screen }]}>
@@ -113,8 +131,9 @@ export const AccountScreen: React.FC = () => {
         contentContainerStyle={[styles.scroll, { paddingBottom: 40 + 88 }]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Total Balance Card */}
         <Card
-          title="Account Balance"
+          title="Total Balance"
           right={
             demoMode ? (
               <StatusBadge label="DEMO WALLET" tone="warning" dot />
@@ -160,15 +179,25 @@ export const AccountScreen: React.FC = () => {
           <View style={[styles.totalBox, { backgroundColor: t.colors.bg.elevated, borderColor: t.colors.border.subtle }]}>
             <View>
               <Text style={[styles.totalLabel, { color: t.colors.text.tertiary }]}>
-                Portfolio value
+                Portfolio Value
               </Text>
               <Text style={[styles.totalValue, { color: t.colors.text.primary }]}>
                 {known && portfolioValue !== null ? `${formatUsdt(portfolioValue)} USDT` : '— USDT'}
               </Text>
             </View>
-            <Text style={[styles.livePrice, { color: t.colors.text.secondary }]}>
-              {price ? `${baseOf(activeSymbol)} ${formatSui(price, 4)}` : ''}
-            </Text>
+            <View style={styles.changeBox}>
+              {todayChangePct !== null && (
+                <Text style={[
+                  styles.changePct,
+                  { color: todayChangePct >= 0 ? t.colors.feedback.success : t.colors.feedback.danger },
+                ]}>
+                  {todayChangePct >= 0 ? '+' : ''}{todayChangePct.toFixed(2)}% today
+                </Text>
+              )}
+              <Text style={[styles.livePrice, { color: t.colors.text.secondary }]}>
+                {price ? `${baseOf(activeSymbol)} ${formatSui(price, 4)}` : ''}
+              </Text>
+            </View>
           </View>
 
           {!known && (
@@ -179,31 +208,40 @@ export const AccountScreen: React.FC = () => {
           )}
         </Card>
 
-        <Card title="Profit & Loss · by date">
-          <View style={[styles.summaryRow, { borderBottomColor: t.colors.border.subtle }]}>
+        {/* Daily P&L Card */}
+        <Card title="Daily P&L">
+          <View style={[styles.dailyHeader, { borderBottomColor: t.colors.border.subtle }]}>
             <View>
-              <Text style={[styles.sumLabel, { color: t.colors.text.tertiary }]}>All time</Text>
-              <Text style={[styles.sumCount, { color: t.colors.text.secondary }]}>
-                {totals.count} completed {totals.count === 1 ? 'trade' : 'trades'}
+              <Text style={[styles.dailyLabel, { color: t.colors.text.tertiary }]}>Today</Text>
+              <Text style={[styles.dailyCount, { color: t.colors.text.secondary }]}>
+                {todayRow ? `${todayRow.count} completed {todayRow.count === 1 ? 'trade' : 'trades'}` : '0 completed trades'}
               </Text>
             </View>
-            <View style={styles.sumRight}>
+            <View style={styles.dailyRight}>
               <Text
                 style={[
-                  styles.sumSui,
-                  { color: totals.sui >= 0 ? t.colors.feedback.success : t.colors.feedback.danger },
+                  styles.dailySui,
+                  { color: todayRow?.profitSui ?? 0 >= 0 ? t.colors.feedback.success : t.colors.feedback.danger },
                 ]}
               >
-                {signed(totals.sui, 3)} SUI
+                {todayRow ? signed(todayRow.profitSui, 3) : '+0.000'} SUI
               </Text>
               <Text
                 style={[
-                  styles.sumUsdt,
-                  { color: totals.usdt >= 0 ? t.colors.feedback.success : t.colors.feedback.danger },
+                  styles.dailyUsdt,
+                  { color: todayRow?.profitUsdt ?? 0 >= 0 ? t.colors.feedback.success : t.colors.feedback.danger },
                 ]}
               >
-                {signed(totals.usdt)} USDT
+                {todayRow ? signedUsdt(todayRow.profitUsdt) : '+0.00'} USDT
               </Text>
+              {todayChangePct !== null && (
+                <Text style={[
+                  styles.dailyChange,
+                  { color: todayChangePct >= 0 ? t.colors.feedback.success : t.colors.feedback.danger },
+                ]}>
+                  {todayChangePct >= 0 ? '+' : ''}{todayChangePct.toFixed(2)}%
+                </Text>
+              )}
             </View>
           </View>
 
@@ -220,11 +258,12 @@ export const AccountScreen: React.FC = () => {
             dayRows.map((row) => {
               const suiPos = row.profitSui >= 0;
               const usdtPos = row.profitUsdt >= 0;
+              const isToday = row.key === dayRows[0]?.key;
               return (
                 <View key={row.key} style={[styles.dayRow, { borderBottomColor: t.colors.border.subtle }]}>
                   <View style={styles.dayLeft}>
                     <Text style={[styles.dayLabel, { color: t.colors.text.primary }]}>
-                      {dayLabel(row.ts)}
+                      {dayLabel(row.ts)}{isToday ? ' · Today' : ''}
                     </Text>
                     <Text style={[styles.dayCount, { color: t.colors.text.tertiary }]}>
                       {row.count} {row.count === 1 ? 'trade' : 'trades'}
@@ -245,7 +284,7 @@ export const AccountScreen: React.FC = () => {
                         { color: usdtPos ? t.colors.feedback.success : t.colors.feedback.danger },
                       ]}
                     >
-                      {signed(row.profitUsdt)} USDT
+                      {signedUsdt(row.profitUsdt)}
                     </Text>
                   </View>
                 </View>
@@ -286,6 +325,8 @@ const styles = StyleSheet.create({
   totalLabel: { fontSize: 11, marginBottom: 4 },
   totalValue: { fontSize: 21, fontWeight: '800' },
   livePrice: { fontSize: 13, fontWeight: '600' },
+  changeBox: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 6 },
+  changePct: { fontSize: 13, fontWeight: '800', fontVariant: ['tabular-nums'] },
   assetLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -302,7 +343,7 @@ const styles = StyleSheet.create({
   assetAmt: { fontSize: 14.5, fontWeight: '700', fontVariant: ['tabular-nums'] },
   assetVal: { fontSize: 10.5, marginTop: 2, fontVariant: ['tabular-nums'] },
   hint: { fontSize: 11.5, lineHeight: 17, marginTop: 12 },
-  summaryRow: {
+  dailyHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -310,11 +351,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     marginBottom: 4,
   },
-  sumLabel: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.6, textTransform: 'uppercase' },
-  sumCount: { fontSize: 12, marginTop: 4 },
-  sumRight: { alignItems: 'flex-end' },
-  sumSui: { fontSize: 17, fontWeight: '800' },
-  sumUsdt: { fontSize: 13, fontWeight: '700', marginTop: 2 },
+  dailyLabel: { fontSize: 11.5, fontWeight: '700', letterSpacing: 0.6, textTransform: 'uppercase' },
+  dailyCount: { fontSize: 12, marginTop: 4 },
+  dailyRight: { alignItems: 'flex-end', gap: 6 },
+  dailySui: { fontSize: 17, fontWeight: '800' },
+  dailyUsdt: { fontSize: 13, fontWeight: '700', marginTop: 2 },
+  dailyChange: { fontSize: 13, fontWeight: '800', fontVariant: ['tabular-nums'] },
   dayRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

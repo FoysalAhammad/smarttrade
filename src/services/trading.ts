@@ -152,8 +152,8 @@ export const DEMO_START_SUI = 1000;
 export const DEMO_START_USDT = 10000;
 
 export const DEFAULT_SETTINGS: Settings = {
-  feeRate: DEFAULT_FEE_RATE,
-  feeSource: 'default',
+  feeRate: 0,
+  feeSource: 'auto',
   targetGain: 5,
   method: 'sell_first',
   mode: 'live',

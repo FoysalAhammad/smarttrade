@@ -135,7 +135,7 @@ export const DrawerMenu: React.FC<DrawerContentComponentProps> = (props) => {
       <View style={[styles.footer, { borderTopColor: t.colors.border.subtle }]}>
         <Text style={[styles.appName, { color: t.colors.text.secondary }]}>SMART TRADE</Text>
         <Text style={[styles.version, { color: t.colors.text.primary }]}>
-          Version {APP_VERSION} <Text style={{ color: t.colors.text.tertiary }}>· Build {BUILD_NO}</Text>
+          v{APP_VERSION} <Text style={{ color: t.colors.text.tertiary }}>· Build {BUILD_NO}</Text>
         </Text>
         <View style={styles.metaRow}>
           <View style={[styles.metaPill, { backgroundColor: t.colors.bg.elevated, borderColor: t.colors.border.subtle }]}>
@@ -144,12 +144,9 @@ export const DrawerMenu: React.FC<DrawerContentComponentProps> = (props) => {
           <View style={[styles.metaPill, { backgroundColor: t.colors.bg.elevated, borderColor: t.colors.border.subtle }]}>
             <Text style={[styles.metaPillText, { color: t.colors.text.tertiary }]}>MIT License</Text>
           </View>
-          <View style={[styles.metaPill, { backgroundColor: t.colors.bg.elevated, borderColor: t.colors.border.subtle }]}>
-            <Text style={[styles.metaPillText, { color: t.colors.text.tertiary }]}>v{APP_VERSION} ({BUILD_NO})</Text>
-          </View>
         </View>
         <Text style={[styles.footerText, { color: t.colors.text.tertiary }]}>
-          © 2026 Foysal Ahammad · Not financial advice
+          Not financial advice
         </Text>
       </View>
     </DrawerContentScrollView>

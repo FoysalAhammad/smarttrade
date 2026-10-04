@@ -86,7 +86,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [feeMsg, setFeeMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [fetchingFee, setFetchingFee] = useState(false);
-  const [feeText, setFeeText] = useState((settings.feeRate * 100).toFixed(3));
+  const [feeText, setFeeText] = useState(
+    settings.feeSource === 'auto' ? '' : (settings.feeRate * 100).toFixed(3)
+  );
   const [targetText, setTargetText] = useState(String(settings.targetGain));
   const [confirmReset, setConfirmReset] = useState(false);
   const [strategyText, setStrategyText] = useState(settings.strategyScript);
@@ -201,6 +203,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const applyFee = () => {
+    if (settings.feeSource === 'auto') return;
     const pct = Number.parseFloat(feeText.replace(/,/g, '.'));
     if (Number.isFinite(pct) && pct >= 0 && pct < 5) {
       onUpdateSettings({ feeRate: pct / 100, feeSource: 'manual' });
@@ -615,14 +618,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       <View style={styles.fieldRow}>
         <View style={styles.fieldWrap}>
           <Text style={[styles.fieldLabel, { color: t.colors.text.tertiary }]}>Fee per trade (%)</Text>
-          <TextInput
-            value={feeText}
-            onChangeText={setFeeText}
-            onEndEditing={applyFee}
-            keyboardType="decimal-pad"
-            style={[styles.input, fieldStyle(t)]}
-            selectionColor={t.colors.brand.primary}
-          />
+          {settings.feeSource === 'auto' ? (
+            <Text style={[styles.autoFeeDisplay, { color: t.colors.brand.primary }]}>
+              Auto (from Binance)
+            </Text>
+          ) : (
+            <TextInput
+              value={feeText}
+              onChangeText={setFeeText}
+              onEndEditing={applyFee}
+              keyboardType="decimal-pad"
+              style={[styles.input, fieldStyle(t)]}
+              selectionColor={t.colors.brand.primary}
+            />
+          )}
         </View>
         <View style={styles.fieldWrap}>
           <Text style={[styles.fieldLabel, { color: t.colors.text.tertiary }]}>Net target (SUI)</Text>
@@ -951,6 +960,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   autoFeeText: { fontSize: 13, fontWeight: '700' },
+  autoFeeDisplay: { fontSize: 14.5, fontWeight: '600', paddingVertical: 12, paddingHorizontal: 14 },
   resetBtn: {
     borderWidth: 1,
     borderRadius: 12,
