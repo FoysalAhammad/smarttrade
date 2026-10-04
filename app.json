@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "Smart Trade",
+    "slug": "sui-swing-trader",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#07090F"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.suiswing.swingtrader",
+      "versionCode": 2,
+      "permissions": [
+        "INTERNET",
+        "VIBRATE",
+        "REQUEST_INSTALL_PACKAGES"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#07090F"
+        }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3940256099942544~3347511713"
+        }
+      ],
+      [
+        "./plugins/withSmartTradeIntegrity",
+        {
+          "signatureSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
+        }
+      ]
+    ],
+    "scheme": "suiswing",
+    "backgroundColor": "#0B0E11",
+    "experiments": {
+      "typedRoutes": true
+    }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-3940256099942544~3347511713"
+  }
+}
