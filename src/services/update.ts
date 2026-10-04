@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as IntentLauncher from 'expo-intent-launcher';
 
-const REPO = 'FoysalAhammad/smarttrade';
+const REPO = 'FoysalAhammad/smarttrade-releases';
 const APK_CACHE_NAME = 'smart-trade-update.apk';
 const FLAG_GRANT_READ = 0x00000001;
 
