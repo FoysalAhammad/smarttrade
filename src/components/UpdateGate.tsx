@@ -22,14 +22,20 @@ export const UpdateGate: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [dismissed, setDismissed] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [checkStatus, setCheckStatus] = useState<string>('checking...');
 
   useEffect(() => {
     let alive = true;
     checkForUpdate()
       .then((info) => {
-        if (alive) setUpdate(info);
+        if (alive) {
+          setUpdate(info);
+          setCheckStatus(info ? `found v${info.version}` : 'no update (same or newer)');
+        }
       })
-      .catch(() => {});
+      .catch((e) => {
+        if (alive) setCheckStatus(`error: ${e instanceof Error ? e.message : String(e)}`);
+      });
     return () => {
       alive = false;
     };
@@ -99,6 +105,10 @@ export const UpdateGate: React.FC<{ children: ReactNode }> = ({ children }) => {
           )}
 
           {!!error && <Text style={[styles.error, { color: t.colors.feedback.danger }]}>{error}</Text>}
+
+          <Text style={{ color: t.colors.text.tertiary, fontSize: 10, textAlign: 'center', marginBottom: 8 }}>
+            {checkStatus}
+          </Text>
 
           <Pressable
             onPress={startUpdate}

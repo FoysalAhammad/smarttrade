@@ -30,16 +30,28 @@ export const isNewerVersion = (remote: string, local: string): boolean => {
     if (a > b) return true;
     if (a < b) return false;
   }
-  return false;
+  return false; // equal or older
+};
+
+/** Check if two version strings are equal */
+export const isSameVersion = (remote: string, local: string): boolean => {
+  const r = parse(remote);
+  const l = parse(local);
+  return r[0] === l[0] && r[1] === l[1] && r[2] === l[2];
 };
 
 /** Latest GitHub release, only when it is newer than the installed version. */
 export const checkForUpdate = async (): Promise<UpdateInfo | null> => {
   try {
+    console.log('[Update] Checking for updates...');
     const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
       headers: { Accept: 'application/vnd.github+json' },
     });
-    if (!res.ok) return null;
+    console.log('[Update] Response status:', res.status);
+    if (!res.ok) {
+      console.log('[Update] Response not ok');
+      return null;
+    }
     const rel = (await res.json()) as {
       tag_name?: string;
       name?: string;
@@ -48,8 +60,17 @@ export const checkForUpdate = async (): Promise<UpdateInfo | null> => {
     };
     const tag = rel.tag_name ?? '';
     const local = Constants.expoConfig?.version ?? '1.0.0';
-    if (!tag || !isNewerVersion(tag, local)) return null;
+    console.log('[Update] Remote tag:', tag, 'Local version:', local);
+    console.log('[Update] isNewerVersion:', isNewerVersion(tag, local));
+    console.log('[Update] isSameVersion:', isSameVersion(tag, local));
+    if (!tag) return null;
+    // Don't show update if already on same or newer version
+    if (isSameVersion(tag, local) || !isNewerVersion(tag, local)) {
+      console.log('[Update] Already on latest version, skipping popup');
+      return null;
+    }
     const apk = (rel.assets ?? []).find((a) => (a.name ?? '').toLowerCase().endsWith('.apk'));
+    console.log('[Update] APK asset:', apk?.name, apk?.browser_download_url);
     if (!apk?.browser_download_url) return null;
     return {
       version: tag.replace(/^v/i, ''),
@@ -57,7 +78,8 @@ export const checkForUpdate = async (): Promise<UpdateInfo | null> => {
       notes: (rel.body ?? '').slice(0, 600),
       apkUrl: apk.browser_download_url,
     };
-  } catch {
+  } catch (e) {
+    console.log('[Update] Error:', e);
     return null;
   }
 };
