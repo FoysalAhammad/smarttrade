@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Smart Trade — professional crypto swing-trading journal. Live charts, fee-aware P&L, strategy scripts, multi-coin portfolio. Privacy-first.">
+    <meta name="theme-color" content="#060911">
+    <meta property="og:title" content="Smart Trade — Crypto Swing Trading Journal">
+    <meta property="og:description" content="Live charts, fee-aware P&L, strategy scripts & multi-coin portfolio. Privacy-first.">
+    <meta property="og:image" content="logo.png">
+    <meta property="og:type" content="website">
     <title>Smart Trade — Crypto Swing Trading Journal</title>
-    <meta name="description" content="Smart Trade: professional crypto swing-trading journal. Live charts, fee-aware P&L, strategy scripts, multi-coin portfolio — privacy-first.">
+    <link rel="icon" href="logo.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900;950&display=swap" rel="stylesheet">
     <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
         :root {
             --bg: #060911;
-            --bg2: #0C1220;
-            --card: #0F1626;
+            --bg2: #0B101E;
+            --card: #0E1628;
+            --card2: #111D33;
             --border: #1A2438;
-            --text: #EAECEF;
+            --border2: #243050;
+            --text: #EDF0F5;
             --dim: #8B94A3;
             --dimmer: #5A6370;
             --blue: #4C8DFF;
@@ -23,11 +36,10 @@
             --orange: #F0B90B;
             --purple: #9B5CFF;
             --pink: #FF6EC7;
+            --radius: 16px;
+            --radius-lg: 24px;
+            --max: 1200px;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -35,538 +47,657 @@
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         ::selection { background: var(--blue); color: #04111F; }
+        img { max-width: 100%; height: auto; display: block; }
+        a { text-decoration: none; }
 
-        /* ===== ANIMATED BACKGROUND ===== */
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+        /* ========== ANIMATED BACKGROUND ========== */
+        .bg-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
         .bg-grid {
-            position: fixed; inset: 0; z-index: 0;
             background-image:
-                linear-gradient(rgba(76,141,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(76,141,255,0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
+                linear-gradient(rgba(76,141,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(76,141,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
-        .bg-glow {
-            position: fixed; z-index: 0; pointer-events: none;
-            width: 600px; height: 600px; border-radius: 50%;
-            filter: blur(180px); opacity: 0.35;
+        .glow {
+            position: absolute; border-radius: 50%; filter: blur(160px);
+            opacity: 0.3;
         }
-        .bg-glow-1 { top: -200px; left: -100px; background: radial-gradient(circle, #4C8DFF, transparent 70%); animation: float1 12s ease-in-out infinite; }
-        .bg-glow-2 { bottom: -200px; right: -150px; background: radial-gradient(circle, #9B5CFF, transparent 70%); animation: float2 15s ease-in-out infinite; }
-        .bg-glow-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, #00D9FF, transparent 70%); animation: float3 18s ease-in-out infinite; opacity: 0.15; }
+        .glow-a { width: 500px; height: 500px; top: -150px; left: -100px; background: radial-gradient(circle, #4C8DFF, transparent 70%); animation: ga 14s ease-in-out infinite; }
+        .glow-b { width: 450px; height: 450px; bottom: -100px; right: -80px; background: radial-gradient(circle, #9B5CFF, transparent 70%); animation: gb 16s ease-in-out infinite; }
+        .glow-c { width: 350px; height: 350px; top: 40%; left: 50%; transform: translate(-50%,-50%); background: radial-gradient(circle, #00D9FF, transparent 70%); opacity: 0.12; animation: gc 20s ease-in-out infinite; }
+        .glow-d { width: 300px; height: 300px; top: 70%; left: 10%; background: radial-gradient(circle, #FF6EC7, transparent 70%); opacity: 0.1; animation: ga 18s ease-in-out infinite reverse; }
 
-        @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(80px,60px)} }
-        @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,-80px)} }
-        @keyframes float3 { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-50%,-45%)} }
+        @keyframes ga { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,50px)} }
+        @keyframes gb { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-50px,-60px)} }
+        @keyframes gc { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-50%,-45%)} }
 
-        .wrap { position: relative; z-index: 1; }
+        /* ========== WRAPPER ========== */
+        .page { position: relative; z-index: 1; }
 
-        /* ===== NAV ===== */
-        nav {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(6,9,17,0.85); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 0;
+        /* ========== NAV ========== */
+        .nav {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(6,9,17,0.88); backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border-bottom: 1px solid rgba(26,36,56,0.7);
+            transition: box-shadow 0.3s;
         }
+        .nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.4); }
         .nav-inner {
-            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            max-width: var(--max); margin: 0 auto; padding: 0 24px;
             display: flex; align-items: center; justify-content: space-between;
+            height: 64px;
         }
-        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-logo img { width: 34px; height: 34px; border-radius: 8px; }
-        .nav-logo span { color: var(--text); font-weight: 800; font-size: 17px; }
-        .nav-links { display: flex; gap: 24px; align-items: center; }
-        .nav-links a {
-            color: var(--dim); text-decoration: none; font-size: 14px;
-            font-weight: 500; transition: color 0.2s;
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+        .nav-brand span { font-weight: 800; font-size: 16px; color: var(--text); letter-spacing: -0.3px; }
+        .nav-menu { display: flex; align-items: center; gap: 6px; }
+        .nav-link {
+            color: var(--dim); font-size: 13.5px; font-weight: 500;
+            padding: 8px 14px; border-radius: 8px;
+            transition: all 0.2s;
         }
-        .nav-links a:hover { color: var(--text); }
-        .nav-cta {
+        .nav-link:hover { color: var(--text); background: rgba(76,141,255,0.08); }
+        .nav-btn {
             background: linear-gradient(135deg, var(--blue), var(--cyan));
-            color: #04111F !important; padding: 9px 20px;
-            border-radius: 10px; font-weight: 700 !important; font-size: 14px;
-            transition: opacity 0.2s, transform 0.2s !important;
+            color: #04111F !important; font-weight: 700 !important;
+            padding: 9px 22px !important; border-radius: 10px !important;
+            transition: all 0.2s !important;
         }
-        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+        .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(76,141,255,0.4); }
+        .hamburger {
+            display: none; background: none; border: none; cursor: pointer;
+            padding: 8px; color: var(--text);
+        }
+        .hamburger svg { width: 24px; height: 24px; }
 
         @media (max-width: 768px) {
-            .nav-links a:not(.nav-cta) { display: none; }
+            .nav-menu {
+                display: none; position: absolute; top: 64px; left: 0; right: 0;
+                background: rgba(6,9,17,0.97); backdrop-filter: blur(24px);
+                flex-direction: column; padding: 16px; gap: 4px;
+                border-bottom: 1px solid var(--border);
+            }
+            .nav-menu.open { display: flex; }
+            .nav-link { width: 100%; text-align: center; padding: 14px; font-size: 15px; }
+            .nav-btn { width: 100%; text-align: center; margin-top: 8px; }
+            .hamburger { display: block; }
         }
 
-        /* ===== HERO ===== */
+        /* ========== HERO ========== */
         .hero {
-            text-align: center; padding: 80px 24px 60px;
-            max-width: 960px; margin: 0 auto;
+            max-width: var(--max); margin: 0 auto;
+            padding: 80px 24px 40px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+            align-items: center;
         }
-        .badge {
+        @media (max-width: 960px) {
+            .hero { grid-template-columns: 1fr; text-align: center; gap: 40px; padding-top: 60px; }
+            .hero-content { align-items: center; }
+            .hero-btns { justify-content: center; }
+        }
+
+        .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(76,141,255,0.12); border: 1px solid rgba(76,141,255,0.3);
-            border-radius: 999px; padding: 6px 16px; font-size: 13px;
-            font-weight: 600; color: var(--blue); margin-bottom: 28px;
-            animation: fadeUp 0.6s ease both;
+            background: rgba(76,141,255,0.1); border: 1px solid rgba(76,141,255,0.25);
+            border-radius: 999px; padding: 6px 18px;
+            font-size: 13px; font-weight: 600; color: var(--blue);
+            margin-bottom: 24px; animation: fadeUp 0.5s ease both;
         }
-        .badge-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
-
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-
-        .hero-logo {
-            width: 96px; height: 96px; border-radius: 28px; margin: 0 auto 28px;
-            box-shadow: 0 8px 40px rgba(76,141,255,0.3);
-            animation: fadeUp 0.6s ease 0.1s both;
-        }
+        .dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.2rem);
-            font-weight: 900; letter-spacing: -0.03em; line-height: 1.1;
-            margin-bottom: 18px; animation: fadeUp 0.6s ease 0.2s both;
+            font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+            font-weight: 900; letter-spacing: -0.04em; line-height: 1.08;
+            margin-bottom: 20px; animation: fadeUp 0.5s ease 0.1s both;
         }
-        .gradient-text {
-            background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 50%, var(--purple) 100%);
+        .grad {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 40%, var(--purple) 100%);
+            background-size: 250% 250%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 200% 200%; animation: gradientShift 4s ease infinite;
+            background-clip: text;
+            animation: gradShift 5s ease infinite;
         }
-        @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
-        .hero-sub {
-            font-size: clamp(1rem, 2.5vw, 1.25rem); color: var(--dim);
-            max-width: 600px; margin: 0 auto 40px; animation: fadeUp 0.6s ease 0.3s both;
+        .hero-desc {
+            font-size: clamp(0.95rem, 2vw, 1.15rem); color: var(--dim);
+            max-width: 520px; line-height: 1.7;
+            animation: fadeUp 0.5s ease 0.2s both;
         }
+        @media (max-width: 960px) { .hero-desc { margin: 0 auto; } }
 
         .hero-btns {
-            display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-            animation: fadeUp 0.6s ease 0.4s both;
+            display: flex; gap: 14px; flex-wrap: wrap; margin-top: 36px;
+            animation: fadeUp 0.5s ease 0.3s both;
         }
-        .btn-primary {
+        .btn-main {
             display: inline-flex; align-items: center; gap: 8px;
             background: linear-gradient(135deg, var(--blue), var(--cyan));
-            color: #04111F; font-weight: 800; font-size: 16px;
-            padding: 16px 36px; border-radius: 14px; text-decoration: none;
+            color: #04111F; font-weight: 800; font-size: 15.5px;
+            padding: 15px 36px; border-radius: 14px;
             box-shadow: 0 4px 24px rgba(76,141,255,0.35);
-            transition: all 0.25s;
+            transition: all 0.25s; border: none; cursor: pointer;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(76,141,255,0.5); }
-        .btn-outline {
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 8px 36px rgba(76,141,255,0.5); }
+        .btn-ghost {
             display: inline-flex; align-items: center; gap: 8px;
             background: transparent; color: var(--text);
-            font-weight: 700; font-size: 16px;
-            padding: 16px 36px; border-radius: 14px;
-            border: 2px solid var(--border); text-decoration: none;
-            transition: all 0.25s;
+            font-weight: 700; font-size: 15.5px;
+            padding: 15px 36px; border-radius: 14px;
+            border: 2px solid var(--border2);
+            transition: all 0.25s; cursor: pointer;
         }
-        .btn-outline:hover { border-color: var(--blue); background: rgba(76,141,255,0.08); }
+        .btn-ghost:hover { border-color: var(--blue); background: rgba(76,141,255,0.06); }
 
-        @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        /* Hero visual */
+        .hero-visual {
+            position: relative; display: flex; justify-content: center;
+            animation: fadeUp 0.6s ease 0.4s both;
+        }
+        .phone {
+            width: 280px; height: 560px;
+            background: var(--bg2); border: 3px solid var(--border2);
+            border-radius: 40px; padding: 10px; position: relative;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(76,141,255,0.08);
+        }
+        .phone::before {
+            content: ''; position: absolute; top: 10px; left: 50%;
+            transform: translateX(-50%); width: 90px; height: 22px;
+            background: var(--bg); border-radius: 0 0 12px 12px; z-index: 5;
+        }
+        .phone-inner {
+            width: 100%; height: 100%; border-radius: 32px;
+            background: linear-gradient(180deg, #0A1020, #0D1828);
+            overflow: hidden; position: relative;
+        }
+        .phone-header {
+            padding: 36px 16px 12px; display: flex;
+            justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .ph-symbol { font-size: 12px; color: var(--dim); font-weight: 600; }
+        .ph-price { font-size: 26px; font-weight: 900; color: var(--text); }
+        .ph-change { font-size: 12px; color: var(--green); font-weight: 700; }
+        .ph-chart {
+            position: absolute; bottom: 50px; left: 12px; right: 12px;
+            height: 220px; display: flex; align-items: flex-end;
+            gap: 3px; padding-bottom: 8px;
+        }
+        .cnd { flex: 1; border-radius: 2px; animation: grow 1.2s ease both; }
+        .cnd.up { background: linear-gradient(180deg, var(--green), rgba(14,203,129,0.5)); }
+        .cnd.dn { background: linear-gradient(180deg, var(--red), rgba(246,70,93,0.5)); }
+        @keyframes grow { from{transform:scaleY(0);transform-origin:bottom} to{transform:scaleY(1);transform-origin:bottom} }
+        .ph-footer {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            display: flex; gap: 8px; padding: 10px 12px;
+            border-top: 1px solid var(--border); background: rgba(6,9,17,0.8);
+        }
+        .ph-btn {
+            flex: 1; text-align: center; font-size: 11px; font-weight: 800;
+            padding: 10px; border-radius: 10px; color: #04111F;
+        }
+        .ph-buy { background: var(--green); }
+        .ph-sell { background: var(--red); color: #fff !important; }
 
-        /* ===== PHONE MOCKUP ===== */
-        .mockup-section { padding: 40px 24px 0; text-align: center; }
-        .phone-mockup {
-            display: inline-block; position: relative;
-            border: 3px solid var(--border); border-radius: 36px;
-            background: var(--bg2); padding: 12px;
-            box-shadow: 0 20px 80px rgba(76,141,255,0.15), 0 0 0 1px rgba(76,141,255,0.1);
-            max-width: 100%;
+        .float-chip {
+            position: absolute; background: var(--card2); border: 1px solid var(--border2);
+            border-radius: 14px; padding: 10px 16px; font-size: 12px;
+            font-weight: 700; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: chipFloat 6s ease-in-out infinite;
         }
-        .phone-screen {
-            width: 320px; height: 560px; border-radius: 26px; overflow: hidden;
-            background: linear-gradient(180deg, #0A0F1A 0%, #0C1525 100%);
-            position: relative;
+        .chip-1 { top: 60px; right: -30px; color: var(--green); animation-delay: 0s; }
+        .chip-2 { bottom: 100px; left: -30px; color: var(--cyan); animation-delay: 2s; }
+        .chip-3 { top: 200px; left: -40px; color: var(--orange); animation-delay: 4s; }
+        @keyframes chipFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @media (max-width: 960px) {
+            .chip-1 { right: 0; } .chip-2 { left: 0; } .chip-3 { left: 0; }
         }
-        .phone-notch {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 100px; height: 24px; background: var(--bg);
-            border-radius: 0 0 14px 14px; z-index: 2;
+        @media (max-width: 480px) {
+            .phone { width: 240px; height: 480px; }
+            .float-chip { display: none; }
         }
-        .phone-chart {
-            position: absolute; inset: 36px 12px 12px;
-            display: flex; align-items: flex-end; gap: 3px; padding: 16px 8px;
-        }
-        .candle {
-            flex: 1; min-width: 4px; border-radius: 2px;
-            animation: candleGrow 1.5s ease both;
-        }
-        .candle.up { background: var(--green); }
-        .candle.down { background: var(--red); }
-        @keyframes candleGrow { from{transform:scaleY(0);transform-origin:bottom} to{transform:scaleY(1);transform-origin:bottom} }
 
-        .phone-ticker {
-            position: absolute; top: 32px; left: 0; right: 0;
-            padding: 12px 16px; display: flex; justify-content: space-between;
-            border-bottom: 1px solid var(--border); font-size: 12px;
-        }
-        .ticker-price { font-size: 22px; font-weight: 800; }
-        .ticker-up { color: var(--green); font-size: 13px; font-weight: 700; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 
-        /* ===== MARQUEE BANNER ===== */
-        .marquee-banner {
-            overflow: hidden; background: linear-gradient(90deg, rgba(76,141,255,0.1), rgba(155,92,255,0.1), rgba(0,217,255,0.1));
+        /* ========== TICKER BANNER ========== */
+        .ticker-wrap {
             border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-            padding: 14px 0; margin-top: 60px;
+            background: linear-gradient(90deg, rgba(76,141,255,0.06), rgba(155,92,255,0.06), rgba(0,217,255,0.06));
+            overflow: hidden; padding: 16px 0; margin-top: 40px;
         }
-        .marquee-track {
-            display: flex; gap: 48px; white-space: nowrap;
-            animation: marquee 25s linear infinite;
-        }
-        .marquee-item {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 14px; font-weight: 600; color: var(--dim);
-        }
-        .marquee-item span { color: var(--cyan); }
-        @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        .ticker-track { display: flex; gap: 48px; white-space: nowrap; animation: ticker 30s linear infinite; width: max-content; }
+        .ticker-item { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--dim); }
+        .ticker-item b { color: var(--cyan); font-weight: 800; }
+        @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-        /* ===== STATS ===== */
+        /* ========== STATS ========== */
         .stats {
-            max-width: 1100px; margin: 60px auto; padding: 0 24px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px;
+            max-width: var(--max); margin: 60px auto; padding: 0 24px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
         }
-        .stat-card {
+        @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 400px) { .stats { grid-template-columns: 1fr; } }
+
+        .stat {
             background: var(--card); border: 1px solid var(--border);
-            border-radius: 18px; padding: 28px 20px; text-align: center;
-            transition: border-color 0.3s, transform 0.3s;
+            border-radius: var(--radius); padding: 30px 16px;
+            text-align: center; transition: all 0.3s;
         }
-        .stat-card:hover { border-color: var(--blue); transform: translateY(-4px); }
-        .stat-num {
-            font-size: 2rem; font-weight: 900;
+        .stat:hover { border-color: var(--blue); transform: translateY(-5px); box-shadow: 0 12px 40px rgba(76,141,255,0.1); }
+        .stat-val {
+            font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900;
             background: linear-gradient(135deg, var(--blue), var(--cyan));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .stat-label { color: var(--dim); font-size: 13px; font-weight: 500; margin-top: 4px; }
 
-        /* ===== FEATURES ===== */
-        .section {
-            max-width: 1100px; margin: 0 auto; padding: 70px 24px;
+        /* ========== SECTION COMMON ========== */
+        .sec { max-width: var(--max); margin: 0 auto; padding: 70px 24px; }
+        .sec-head { text-align: center; margin-bottom: 50px; }
+        .sec-tag {
+            display: inline-block; background: rgba(76,141,255,0.1);
+            border: 1px solid rgba(76,141,255,0.2); border-radius: 999px;
+            padding: 5px 16px; font-size: 12px; font-weight: 700;
+            color: var(--blue); letter-spacing: 1px; text-transform: uppercase;
+            margin-bottom: 16px;
         }
-        .section-title {
-            text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem);
-            font-weight: 900; letter-spacing: -0.02em; margin-bottom: 10px;
+        .sec-title {
+            font-size: clamp(1.7rem, 4vw, 2.6rem); font-weight: 900;
+            letter-spacing: -0.03em; line-height: 1.15;
         }
-        .section-sub {
-            text-align: center; color: var(--dim); font-size: 16px;
-            max-width: 600px; margin: 0 auto 50px;
+        .sec-sub {
+            color: var(--dim); font-size: clamp(0.9rem, 2vw, 1.05rem);
+            max-width: 600px; margin: 14px auto 0; line-height: 1.7;
         }
-        .grid-3 {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px;
-        }
-        .fcard {
+
+        /* ========== FEATURES ========== */
+        .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        @media (max-width: 960px) { .feat-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .feat-grid { grid-template-columns: 1fr; } }
+
+        .feat {
             background: var(--card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 30px;
+            border-radius: var(--radius-lg); padding: 28px;
             transition: all 0.3s; position: relative; overflow: hidden;
         }
-        .fcard::before {
+        .feat::after {
             content: ''; position: absolute; top: 0; left: 0; right: 0;
             height: 3px; background: linear-gradient(90deg, var(--blue), var(--cyan));
             opacity: 0; transition: opacity 0.3s;
         }
-        .fcard:hover { border-color: rgba(76,141,255,0.4); transform: translateY(-6px); }
-        .fcard:hover::before { opacity: 1; }
-        .fcard-icon {
-            width: 52px; height: 52px; border-radius: 14px;
+        .feat:hover { border-color: rgba(76,141,255,0.35); transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+        .feat:hover::after { opacity: 1; }
+        .feat-icon {
+            width: 50px; height: 50px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; margin-bottom: 18px;
+            font-size: 22px; margin-bottom: 18px;
         }
-        .icon-blue { background: rgba(76,141,255,0.15); }
-        .icon-green { background: rgba(14,203,129,0.15); }
-        .icon-orange { background: rgba(240,185,11,0.15); }
-        .icon-purple { background: rgba(155,92,255,0.15); }
-        .icon-pink { background: rgba(255,110,199,0.15); }
-        .icon-cyan { background: rgba(0,217,255,0.15); }
-        .fcard h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
-        .fcard p { color: var(--dim); font-size: 14px; line-height: 1.65; }
+        .fi-blue { background: rgba(76,141,255,0.12); }
+        .fi-green { background: rgba(14,203,129,0.12); }
+        .fi-orange { background: rgba(240,185,11,0.12); }
+        .fi-purple { background: rgba(155,92,255,0.12); }
+        .fi-pink { background: rgba(255,110,199,0.12); }
+        .fi-cyan { background: rgba(0,217,255,0.12); }
+        .feat h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
+        .feat p { color: var(--dim); font-size: 14px; line-height: 1.7; }
 
-        /* ===== METHOD SECTION ===== */
-        .methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-        .method-card {
+        /* ========== METHODS ========== */
+        .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 768px) { .method-grid { grid-template-columns: 1fr; } }
+
+        .method {
             background: var(--card); border: 1px solid var(--border);
-            border-radius: 22px; padding: 32px; position: relative;
-            overflow: hidden;
+            border-radius: var(--radius-lg); padding: 36px;
+            position: relative; overflow: hidden;
         }
+        .method::before {
+            content: ''; position: absolute; top: -40px; right: -40px;
+            width: 140px; height: 140px; border-radius: 50%;
+            opacity: 0.04;
+        }
+        .m1::before { background: var(--green); }
+        .m2::before { background: var(--red); }
         .method-num {
-            font-size: 64px; font-weight: 900; position: absolute;
-            top: -10px; right: 16px; opacity: 0.06;
-            background: linear-gradient(135deg, var(--blue), var(--cyan));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            position: absolute; top: 8px; right: 16px;
+            font-size: 72px; font-weight: 900; opacity: 0.04; line-height: 1;
         }
-        .method-tag {
-            display: inline-block; padding: 4px 12px; border-radius: 999px;
-            font-size: 11px; font-weight: 800; letter-spacing: 1px;
-            text-transform: uppercase; margin-bottom: 14px;
+        .m-tag {
+            display: inline-block; padding: 4px 14px; border-radius: 999px;
+            font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
+            text-transform: uppercase; margin-bottom: 16px;
         }
-        .tag-1 { background: rgba(14,203,129,0.15); color: var(--green); border: 1px solid rgba(14,203,129,0.3); }
-        .tag-2 { background: rgba(246,70,93,0.15); color: var(--red); border: 1px solid rgba(246,70,93,0.3); }
-        .method-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-        .method-card p { color: var(--dim); font-size: 14.5px; line-height: 1.7; }
-        .method-formula {
-            margin-top: 16px; background: rgba(76,141,255,0.06);
-            border: 1px solid rgba(76,141,255,0.15); border-radius: 12px;
-            padding: 14px; font-family: monospace; font-size: 13px;
-            color: var(--cyan);
+        .m-tag-1 { background: rgba(14,203,129,0.12); color: var(--green); border: 1px solid rgba(14,203,129,0.3); }
+        .m-tag-2 { background: rgba(246,70,93,0.12); color: var(--red); border: 1px solid rgba(246,70,93,0.3); }
+        .method h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.3px; }
+        .method p { color: var(--dim); font-size: 14.5px; line-height: 1.75; }
+        .m-formula {
+            margin-top: 18px; background: rgba(76,141,255,0.05);
+            border: 1px solid rgba(76,141,255,0.12); border-radius: 12px;
+            padding: 14px 16px; font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px; color: var(--cyan); letter-spacing: 0.5px;
         }
 
-        /* ===== DOWNLOAD ===== */
-        .download-section {
-            max-width: 800px; margin: 40px auto 80px; padding: 0 24px;
-            text-align: center;
+        /* ========== SCREENSHOTS ========== */
+        .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media (max-width: 768px) { .shots { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; } }
+        .shot {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); overflow: hidden;
+            transition: all 0.3s;
         }
-        .download-card {
-            background: linear-gradient(135deg, rgba(76,141,255,0.1), rgba(155,92,255,0.08));
-            border: 1px solid rgba(76,141,255,0.3); border-radius: 28px;
-            padding: 50px 36px;
+        .shot:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.35); border-color: var(--border2); }
+        .shot img { width: 100%; aspect-ratio: 9/16; object-fit: cover; }
+        .shot-label { padding: 14px 16px; font-size: 13px; font-weight: 700; color: var(--dim); text-align: center; }
+
+        /* ========== DOWNLOAD ========== */
+        .dl-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 80px; }
+        .dl-card {
+            background: linear-gradient(135deg, rgba(76,141,255,0.1), rgba(155,92,255,0.07));
+            border: 1px solid rgba(76,141,255,0.25); border-radius: 28px;
+            padding: 50px 36px; text-align: center;
+            position: relative; overflow: hidden;
         }
-        .download-card h2 { font-size: 2rem; font-weight: 900; margin-bottom: 10px; }
-        .download-card p { color: var(--dim); margin-bottom: 30px; font-size: 15px; }
-        .download-info {
-            display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
-            margin-top: 24px;
+        .dl-card::before {
+            content: ''; position: absolute; top: -60px; left: 50%;
+            transform: translateX(-50%); width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(76,141,255,0.15), transparent 70%);
+            border-radius: 50%; pointer-events: none;
         }
-        .download-info span {
-            color: var(--dimmer); font-size: 13px;
+        .dl-card h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900; margin-bottom: 10px; }
+        .dl-card > p { color: var(--dim); font-size: 15px; margin-bottom: 30px; }
+        .dl-meta {
+            display: flex; gap: 24px; justify-content: center;
+            flex-wrap: wrap; margin-top: 28px;
+        }
+        .dl-meta span {
+            color: var(--dimmer); font-size: 13px; font-weight: 500;
             display: flex; align-items: center; gap: 6px;
         }
 
-        /* ===== FOOTER ===== */
-        footer {
+        /* ========== FOOTER ========== */
+        .footer {
             background: var(--bg2); border-top: 1px solid var(--border);
-            padding: 50px 24px 30px;
+            padding: 56px 24px 32px;
         }
-        .footer-inner {
-            max-width: 1100px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: flex-start;
-            flex-wrap: wrap; gap: 30px;
+        .footer-top {
+            max-width: var(--max); margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
         }
-        .footer-brand p { color: var(--dimmer); font-size: 13px; margin-top: 8px; max-width: 300px; }
-        .footer-links h4 { color: var(--text); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-        .footer-links a {
+        @media (max-width: 768px) { .footer-top { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }
+
+        .footer-brand p { color: var(--dimmer); font-size: 13.5px; margin-top: 12px; max-width: 320px; line-height: 1.7; }
+        .footer-col h4 {
+            font-size: 12px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--text); margin-bottom: 16px;
+        }
+        .footer-col a {
             display: block; color: var(--dim); font-size: 14px;
-            text-decoration: none; margin-bottom: 8px; transition: color 0.2s;
+            margin-bottom: 10px; transition: color 0.2s; padding: 2px 0;
         }
-        .footer-links a:hover { color: var(--blue); }
-        .footer-bottom {
-            max-width: 1100px; margin: 30px auto 0; padding-top: 24px;
+        .footer-col a:hover { color: var(--blue); }
+        .footer-bot {
+            max-width: var(--max); margin: 36px auto 0; padding-top: 24px;
             border-top: 1px solid var(--border);
             display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
             color: var(--dimmer); font-size: 13px;
         }
 
-        /* ===== SCROLL REVEAL ===== */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        /* ========== REVEAL ========== */
+        .rv { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+        .rv.on { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
-    <div class="bg-grid"></div>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-    <div class="bg-glow bg-glow-3"></div>
+    <div class="bg-layer bg-grid"></div>
+    <div class="bg-layer">
+        <div class="glow glow-a"></div>
+        <div class="glow glow-b"></div>
+        <div class="glow glow-c"></div>
+        <div class="glow glow-d"></div>
+    </div>
 
-    <div class="wrap">
+    <div class="page">
         <!-- NAV -->
-        <nav>
+        <nav class="nav" id="nav">
             <div class="nav-inner">
-                <a href="/" class="nav-logo">
+                <a href="/" class="nav-brand">
                     <img src="logo.png" alt="Smart Trade" onerror="this.style.display='none'">
                     <span>Smart Trade</span>
                 </a>
-                <div class="nav-links">
-                    <a href="#features">Features</a>
-                    <a href="#methods">Methods</a>
-                    <a href="#download">Download</a>
-                    <a href="privacy.html">Privacy</a>
-                    <a href="https://github.com/FoysalAhammad/smarttrade/releases/latest" class="nav-cta">Get APK</a>
+                <div class="nav-menu" id="navMenu">
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#methods" class="nav-link">Methods</a>
+                    <a href="#screenshots" class="nav-link">Screenshots</a>
+                    <a href="#download" class="nav-link">Download</a>
+                    <a href="privacy.html" class="nav-link">Privacy</a>
+                    <a href="https://github.com/FoysalAhammad/smarttrade/releases/latest" class="nav-link nav-btn">⬇ Get APK</a>
                 </div>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
             </div>
         </nav>
 
         <!-- HERO -->
         <section class="hero">
-            <div class="badge">
-                <span class="badge-dot"></span>
-                v1.1.2 · Drawer Fix &amp; P&amp;L Improvements
+            <div class="hero-content">
+                <div class="hero-badge"><span class="dot"></span> v1.1.2 · Drawer Fix &amp; P&amp;L Improvements</div>
+                <h1>Trade Smarter with<br><span class="grad">Smart Trade</span></h1>
+                <p class="hero-desc">
+                    Your personal crypto swing-trading journal — live charts,
+                    fee-aware P&amp;L, strategy scripts &amp; multi-coin portfolio.
+                    Privacy-first: no accounts, no trackers.
+                </p>
+                <div class="hero-btns">
+                    <a href="https://github.com/FoysalAhammad/smarttrade/releases/latest" class="btn-main">⬇ Download APK</a>
+                    <a href="#features" class="btn-ghost">Explore Features →</a>
+                </div>
             </div>
-            <img src="logo.png" alt="Smart Trade" class="hero-logo" onerror="this.style.display='none'">
-            <h1>
-                Trade Smarter<br>
-                with <span class="gradient-text">Smart Trade</span>
-            </h1>
-            <p class="hero-sub">
-                Your personal crypto swing-trading journal — live charts, fee-aware P&amp;L,
-                strategy scripts &amp; multi-coin portfolio. Privacy-first, no accounts.
-            </p>
-            <div class="hero-btns">
-                <a href="https://github.com/FoysalAhammad/smarttrade/releases/latest" class="btn-primary">
-                    ⬇ Download APK
-                </a>
-                <a href="#features" class="btn-outline">Explore Features →</a>
+            <div class="hero-visual">
+                <div class="float-chip chip-1">📈 +2.4% today</div>
+                <div class="float-chip chip-2">🎯 Target hit!</div>
+                <div class="float-chip chip-3">💰 Fee saved: 0.075%</div>
+                <div class="phone">
+                    <div class="phone-inner">
+                        <div class="phone-header">
+                            <div>
+                                <div class="ph-symbol">SUI / USDT</div>
+                                <div class="ph-price">$1.1814</div>
+                            </div>
+                            <div class="ph-change">▲ +0.33%</div>
+                        </div>
+                        <div class="ph-chart" id="phChart"></div>
+                        <div class="ph-footer">
+                            <div class="ph-btn ph-buy">BUY</div>
+                            <div class="ph-btn ph-sell">SELL</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- PHONE MOCKUP -->
-        <div class="mockup-section">
-            <div class="phone-mockup">
-                <div class="phone-screen">
-                    <div class="phone-notch"></div>
-                    <div class="phone-ticker">
-                        <div>
-                            <div style="color:var(--dim);font-size:11px;">SUI/USDT</div>
-                            <div class="ticker-price">$1.1814</div>
-                        </div>
-                        <div class="ticker-up">▲ +0.33%</div>
-                    </div>
-                    <div class="phone-chart" id="chart"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- MARQUEE BANNER -->
-        <div class="marquee-banner">
-            <div class="marquee-track">
-                <div class="marquee-item"><span>●</span> Live Charts</div>
-                <div class="marquee-item"><span>●</span> Fee-Aware P&amp;L</div>
-                <div class="marquee-item"><span>●</span> Strategy Scripts</div>
-                <div class="marquee-item"><span>●</span> Multi-Coin Portfolio</div>
-                <div class="marquee-item"><span>●</span> Demo Paper Wallet</div>
-                <div class="marquee-item"><span>●</span> Auto Targets</div>
-                <div class="marquee-item"><span>●</span> Privacy First</div>
-                <div class="marquee-item"><span>●</span> Open Source</div>
-                <div class="marquee-item"><span>●</span> Live Charts</div>
-                <div class="marquee-item"><span>●</span> Fee-Aware P&amp;L</div>
-                <div class="marquee-item"><span>●</span> Strategy Scripts</div>
-                <div class="marquee-item"><span>●</span> Multi-Coin Portfolio</div>
-                <div class="marquee-item"><span>●</span> Demo Paper Wallet</div>
-                <div class="marquee-item"><span>●</span> Auto Targets</div>
-                <div class="marquee-item"><span>●</span> Privacy First</div>
-                <div class="marquee-item"><span>●</span> Open Source</div>
+        <!-- TICKER -->
+        <div class="ticker-wrap">
+            <div class="ticker-track" id="tickerTrack">
+                <div class="ticker-item"><b>●</b> Live Charts</div>
+                <div class="ticker-item"><b>●</b> Fee-Aware P&amp;L</div>
+                <div class="ticker-item"><b>●</b> Strategy Scripts</div>
+                <div class="ticker-item"><b>●</b> Multi-Coin Portfolio</div>
+                <div class="ticker-item"><b>●</b> Demo Paper Wallet</div>
+                <div class="ticker-item"><b>●</b> Auto Targets</div>
+                <div class="ticker-item"><b>●</b> Privacy First</div>
+                <div class="ticker-item"><b>●</b> Open Source · MIT</div>
+                <div class="ticker-item"><b>●</b> Live Charts</div>
+                <div class="ticker-item"><b>●</b> Fee-Aware P&amp;L</div>
+                <div class="ticker-item"><b>●</b> Strategy Scripts</div>
+                <div class="ticker-item"><b>●</b> Multi-Coin Portfolio</div>
+                <div class="ticker-item"><b>●</b> Demo Paper Wallet</div>
+                <div class="ticker-item"><b>●</b> Auto Targets</div>
+                <div class="ticker-item"><b>●</b> Privacy First</div>
+                <div class="ticker-item"><b>●</b> Open Source · MIT</div>
             </div>
         </div>
 
         <!-- STATS -->
         <div class="stats">
-            <div class="stat-card reveal">
-                <div class="stat-num">2</div>
-                <div class="stat-label">Swing Methods</div>
-            </div>
-            <div class="stat-card reveal">
-                <div class="stat-num">1m–4H</div>
-                <div class="stat-label">Chart Intervals</div>
-            </div>
-            <div class="stat-card reveal">
-                <div class="stat-num">100%</div>
-                <div class="stat-label">Local Data</div>
-            </div>
-            <div class="stat-card reveal">
-                <div class="stat-num">0</div>
-                <div class="stat-label">Trackers / Accounts</div>
-            </div>
+            <div class="stat rv"><div class="stat-val">2</div><div class="stat-label">Swing Methods</div></div>
+            <div class="stat rv"><div class="stat-val">1m–4H</div><div class="stat-label">Chart Intervals</div></div>
+            <div class="stat rv"><div class="stat-val">100%</div><div class="stat-label">Local Data</div></div>
+            <div class="stat rv"><div class="stat-val">0</div><div class="stat-label">Trackers</div></div>
         </div>
 
         <!-- FEATURES -->
-        <section class="section" id="features">
-            <h2 class="section-title reveal">Everything You Need</h2>
-            <p class="section-sub reveal">Professional-grade tools for crypto swing traders — built with privacy at the core.</p>
-            <div class="grid-3">
-                <div class="fcard reveal">
-                    <div class="fcard-icon icon-blue">📊</div>
+        <section class="sec" id="features">
+            <div class="sec-head">
+                <div class="sec-tag">Features</div>
+                <h2 class="sec-title">Everything You Need</h2>
+                <p class="sec-sub">Professional-grade tools for crypto swing traders — built with privacy at the core.</p>
+            </div>
+            <div class="feat-grid">
+                <div class="feat rv">
+                    <div class="feat-icon fi-blue">📊</div>
                     <h3>Live Candlestick Charts</h3>
-                    <p>Real-time charts with 1m, 5m, 15m, 1H and 4H intervals. Two-finger pinch zoom &amp; pan gestures for precise analysis.</p>
+                    <p>Real-time charts with 1m, 5m, 15m, 1H and 4H intervals. Two-finger pinch zoom &amp; pan for precise analysis.</p>
                 </div>
-                <div class="fcard reveal">
-                    <div class="fcard-icon icon-purple">📝</div>
+                <div class="feat rv">
+                    <div class="feat-icon fi-purple">📝</div>
                     <h3>Strategy Scripts</h3>
-                    <p>Pine-style scripts (EMA, SMA, RSI, crossover) rendered live on the chart. Paste TradingView-style code and get signals instantly.</p>
+                    <p>Pine-style scripts (EMA, SMA, RSI, crossover) rendered live on the chart. Paste TradingView code, get signals.</p>
                 </div>
-                <div class="fcard reveal">
-                    <div class="fcard-icon icon-green">💰</div>
+                <div class="feat rv">
+                    <div class="feat-icon fi-green">💰</div>
                     <h3>Fee-Aware P&amp;L</h3>
-                    <p>Auto-fetches your exact Binance VIP taker rate. Every profit figure is net of fees — no hidden costs in your journal.</p>
+                    <p>Auto-fetches your exact Binance VIP taker rate. Every profit figure is net of fees — no hidden costs.</p>
                 </div>
-                <div class="fcard reveal">
-                    <div class="fcard-icon icon-orange">🎯</div>
+                <div class="feat rv">
+                    <div class="feat-icon fi-orange">🎯</div>
                     <h3>Auto Targets</h3>
-                    <p>Set a net gain target, get zone alerts as price approaches, and auto-arm re-entry / take-profit cycles with notifications.</p>
+                    <p>Set a net gain target, get zone alerts as price approaches, auto-arm re-entry / take-profit cycles.</p>
                 </div>
-                <div class="fcard reveal">
-                    <div class="fcard-icon icon-pink">📱</div>
+                <div class="feat rv">
+                    <div class="feat-icon fi-pink">📱</div>
                     <h3>Multi-Coin Portfolio</h3>
-                    <p>Track any USDT pair. Live prices from Binance, full portfolio valuation in USDT, demo paper wallet included.</p>
+                    <p>Track any USDT pair. Live prices from Binance, portfolio valuation in USDT, demo paper wallet included.</p>
                 </div>
-                <div class="fcard reveal">
-                    <div class="fcard-icon icon-cyan">🔒</div>
+                <div class="feat rv">
+                    <div class="feat-icon fi-cyan">🔒</div>
                     <h3>Privacy First</h3>
-                    <p>No accounts, no servers, no analytics. API keys stored in Android Keystore. Your data never leaves your device.</p>
+                    <p>No accounts, no servers, no analytics. API keys in Android Keystore. Your data never leaves your device.</p>
                 </div>
             </div>
         </section>
 
         <!-- METHODS -->
-        <section class="section" id="methods">
-            <h2 class="section-title reveal">Two Swing Methods</h2>
-            <p class="section-sub reveal">Choose the strategy that fits your trading style — both fully supported with fee-aware P&amp;L.</p>
-            <div class="methods">
-                <div class="method-card reveal">
+        <section class="sec" id="methods">
+            <div class="sec-head">
+                <div class="sec-tag">Strategies</div>
+                <h2 class="sec-title">Two Swing Methods</h2>
+                <p class="sec-sub">Choose the strategy that fits your style — both fully supported with fee-aware P&amp;L.</p>
+            </div>
+            <div class="method-grid">
+                <div class="method m1 rv">
                     <div class="method-num">01</div>
-                    <span class="method-tag tag-1">Sell First</span>
+                    <span class="m-tag m-tag-1">Sell First</span>
                     <h3>Sell → Re-buy the Dip</h3>
-                    <p>Already holding? Log your sell, wait for the dip, and buy back lower. Profit shows in extra coins — perfect for ranging markets.</p>
-                    <div class="method-formula">
-                        profit = sellPrice − reentryPrice → extra SUI
-                    </div>
+                    <p>Already holding? Log your sell, wait for the dip, buy back lower. Profit shows in extra coins — perfect for ranging markets.</p>
+                    <div class="m-formula">profit = sellPrice − reentryPrice → extra SUI</div>
                 </div>
-                <div class="method-card reveal">
+                <div class="method m2 rv">
                     <div class="method-num">02</div>
-                    <span class="method-tag tag-2">Buy First</span>
+                    <span class="m-tag m-tag-2">Buy First</span>
                     <h3>Buy → Sell the Rise</h3>
-                    <p>Buy at market, wait for the rise, sell higher. Profit shows in USDT, expressed in SUI at entry price — ideal for trending markets.</p>
-                    <div class="method-formula">
-                        profit = sellPrice − buyPrice → USDT (net of fees)
-                    </div>
+                    <p>Buy at market, wait for the rise, sell higher. Profit shows in USDT (expressed in SUI at entry) — ideal for trending markets.</p>
+                    <div class="m-formula">profit = sellPrice − buyPrice → USDT (net of fees)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREENSHOTS -->
+        <section class="sec" id="screenshots">
+            <div class="sec-head">
+                <div class="sec-tag">Preview</div>
+                <h2 class="sec-title">See It in Action</h2>
+                <p class="sec-sub">A glimpse of the app — charts, trades and portfolio at a glance.</p>
+            </div>
+            <div class="shots">
+                <div class="shot rv">
+                    <img src="playstore/screenshots/02-dashboard-chart.png" alt="Dashboard" loading="lazy">
+                    <div class="shot-label">📊 Dashboard &amp; Chart</div>
+                </div>
+                <div class="shot rv">
+                    <img src="playstore/screenshots/05-strategy-script.png" alt="Strategy Script" loading="lazy">
+                    <div class="shot-label">📝 Strategy Script</div>
+                </div>
+                <div class="shot rv">
+                    <img src="playstore/screenshots/06-account-pnl.png" alt="Account P&L" loading="lazy">
+                    <div class="shot-label">💰 Account &amp; P&amp;L</div>
                 </div>
             </div>
         </section>
 
         <!-- DOWNLOAD -->
-        <div class="download-section" id="download">
-            <div class="download-card reveal">
+        <div class="dl-wrap" id="download">
+            <div class="dl-card rv">
                 <h2>Ready to Trade?</h2>
                 <p>Download the latest APK and start your swing-trading journal today.</p>
-                <a href="https://github.com/FoysalAhammad/smarttrade/releases/latest" class="btn-primary" style="font-size:18px; padding:18px 48px;">
-                    ⬇ Download Smart Trade v1.1.2
-                </a>
-                <div class="download-info">
+                <a href="https://github.com/FoysalAhammad/smarttrade/releases/latest" class="btn-main" style="font-size:17px; padding:18px 50px;">⬇ Download Smart Trade v1.1.2</a>
+                <div class="dl-meta">
                     <span>📱 Android 7.0+</span>
                     <span>📦 ~112 MB</span>
-                    <span>🔧 Universal (arm64 + x86_64 + armeabi-v7a)</span>
+                    <span>🔧 arm64 + x86_64 + armeabi-v7a</span>
                 </div>
             </div>
         </div>
 
         <!-- FOOTER -->
-        <footer>
-            <div class="footer-inner">
+        <footer class="footer">
+            <div class="footer-top">
                 <div class="footer-brand">
-                    <a href="/" class="nav-logo">
-                        <img src="logo.png" alt="Smart Trade" onerror="this.style.display='none'">
-                        <span>Smart Trade</span>
+                    <a href="/" class="nav-brand">
+                        <img src="logo.png" alt="Smart Trade" onerror="this.style.display='none'" style="width:36px;height:36px;border-radius:8px;">
+                        <span style="font-weight:800;font-size:17px;color:var(--text);">Smart Trade</span>
                     </a>
-                    <p>Professional crypto swing-trading journal. Privacy-first, no accounts, no trackers.</p>
+                    <p>Professional crypto swing-trading journal. Privacy-first, no accounts, no trackers. Built for Android.</p>
                 </div>
-                <div class="footer-links">
+                <div class="footer-col">
                     <h4>Product</h4>
                     <a href="#features">Features</a>
                     <a href="#methods">Methods</a>
+                    <a href="#screenshots">Screenshots</a>
                     <a href="#download">Download</a>
                 </div>
-                <div class="footer-links">
+                <div class="footer-col">
                     <h4>Resources</h4>
                     <a href="privacy.html">Privacy Policy</a>
+                    <a href="PRIVACY_POLICY.md">Privacy (MD)</a>
                     <a href="https://github.com/FoysalAhammad/smarttrade/wiki">Wiki</a>
                     <a href="https://github.com/FoysalAhammad/smarttrade/releases">Releases</a>
                 </div>
-                <div class="footer-links">
+                <div class="footer-col">
                     <h4>Legal</h4>
                     <a href="privacy.html">Privacy</a>
-                    <a href="https://github.com/FoysalAhammad/smarttrade">Source</a>
+                    <a href="https://github.com/FoysalAhammad/smarttrade">Source Code</a>
+                    <a href="https://github.com/FoysalAhammad/smarttrade/blob/main/LICENSE">MIT License</a>
                 </div>
             </div>
-            <div class="footer-bottom">
+            <div class="footer-bot">
                 <span>© 2026 Foysal Ahammad · MIT License</span>
                 <span>Not financial advice · Use at your own risk</span>
             </div>
@@ -574,28 +705,35 @@
     </div>
 
     <script>
-        // Candlestick chart in phone mockup
-        const chart = document.getElementById('chart');
-        const candles = [];
-        let price = 100;
-        for (let i = 0; i < 50; i++) {
-            const change = (Math.random() - 0.48) * 30;
-            const up = change >= 0;
-            const height = Math.abs(change) + 5;
-            const c = document.createElement('div');
-            c.className = 'candle ' + (up ? 'up' : 'down');
-            c.style.height = height + 'px';
-            c.style.animationDelay = (i * 0.03) + 's';
-            chart.appendChild(c);
+        // Phone chart candles
+        const pc = document.getElementById('phChart');
+        for (let i = 0; i < 40; i++) {
+            const ch = (Math.random() - 0.47) * 28;
+            const el = document.createElement('div');
+            el.className = 'cnd ' + (ch >= 0 ? 'up' : 'dn');
+            el.style.height = (Math.abs(ch) + 6) + 'px';
+            el.style.animationDelay = (i * 0.04) + 's';
+            pc.appendChild(el);
         }
 
+        // Nav scroll shadow
+        window.addEventListener('scroll', () => {
+            document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+        });
+
+        // Hamburger
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('open');
+        });
+        document.querySelectorAll('#navMenu a').forEach(a => {
+            a.addEventListener('click', () => document.getElementById('navMenu').classList.remove('open'));
+        });
+
         // Scroll reveal
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.rv').forEach(el => io.observe(el));
     </script>
 </body>
 </html>
